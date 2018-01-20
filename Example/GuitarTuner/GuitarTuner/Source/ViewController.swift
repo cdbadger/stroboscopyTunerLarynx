@@ -1,8 +1,8 @@
 import UIKit
-import Beethoven
 import Pitchy
 import Hue
 import Cartography
+import Beethoven
 
 final class ViewController: UIViewController {
   lazy var noteLabel: UILabel = {
