@@ -52,7 +52,7 @@ final class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    title = "Tuner".uppercased()
+    title = "Stroboscopy".uppercased()
     view.backgroundColor = UIColor(hex: "111011")
 
     [noteLabel, actionButton, offsetLabel].forEach {
