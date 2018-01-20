@@ -35,7 +35,7 @@ final class ViewController: UIViewController {
 
     button.addTarget(self, action: #selector(ViewController.actionButtonDidPress(_:)),
       for: .touchUpInside)
-    button.setTitle("Start".uppercased(), for: UIControlState())
+    button.setTitle("Detect Pitch".uppercased(), for: UIControlState())
 
     return button
   }()
