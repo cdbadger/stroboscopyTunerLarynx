@@ -7,7 +7,7 @@ import Beethoven
 final class ViewController: UIViewController {
   lazy var noteLabel: UILabel = {
     let label = UILabel()
-    label.text = "--"
+    label.text = "-- Hz"
     label.font = UIFont.boldSystemFont(ofSize: 65)
     label.textColor = UIColor(hex: "DCD9DB")
     label.textAlignment = .center
@@ -35,7 +35,7 @@ final class ViewController: UIViewController {
 
     button.addTarget(self, action: #selector(ViewController.actionButtonDidPress(_:)),
       for: .touchUpInside)
-    button.setTitle("Detect Pitch".uppercased(), for: UIControlState())
+    button.setTitle("Detect frequency".uppercased(), for: UIControlState())
 
     return button
   }()
@@ -66,7 +66,7 @@ final class ViewController: UIViewController {
 
   @objc func actionButtonDidPress(_ button: UIButton) {
     let text = pitchEngine.active
-      ? NSLocalizedString("Start", comment: "").uppercased()
+      ? NSLocalizedString("Detect frequency", comment: "").uppercased()
       : NSLocalizedString("Stop", comment: "").uppercased()
 
     button.setTitle(text, for: .normal)
@@ -128,7 +128,7 @@ final class ViewController: UIViewController {
 
 extension ViewController: PitchEngineDelegate {
   func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch) {
-    noteLabel.text = pitch.note.string
+    noteLabel.text = "\(round(pitch.frequency)) Hz"
 
     let offsetPercentage = pitch.closestOffset.percentage
     let absOffsetPercentage = abs(offsetPercentage)
@@ -138,13 +138,18 @@ extension ViewController: PitchEngineDelegate {
     guard absOffsetPercentage > 1.0 else {
       return
     }
-
-    let prefix = offsetPercentage > 0 ? "+" : "-"
+    
+// Offset labels coommented out
+  /*
+     let prefix = offsetPercentage > 0 ? "+" : "-"
     let color = offsetColor(offsetPercentage)
-
+ */
+    
+/*
     offsetLabel.text = "\(prefix)" + String(format:"%.2f", absOffsetPercentage) + "%"
     offsetLabel.textColor = color
     offsetLabel.isHidden = false
+ */
   }
 
   func pitchEngine(_ pitchEngine: PitchEngine, didReceiveError error: Error) {
