@@ -47,7 +47,7 @@ final class ViewController: UIViewController {
     button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
     button.setTitleColor(UIColor.white, for: UIControlState())
     
-    button.addTarget(self, action: #selector(ViewController.strobeButtonDidPress(_:)), for: .touchUpInside)
+    //button.addTarget(self, action: #selector(ViewController.strobeButtonDidPress(_:)), for: .touchUpInside)
     button.setTitle("Start Strobe".uppercased(), for: UIControlState())
     
     return button
@@ -94,9 +94,9 @@ final class ViewController: UIViewController {
     offsetLabel.isHidden = !pitchEngine.active
   }
   
-  @objc func strobeButtonDidPress( _ button: UIButton) {
+ /* @objc func strobeButtonDidPress( _ button: UIButton) {
     let text = StrobeLights.
-  }
+  }*/
  
 
  
