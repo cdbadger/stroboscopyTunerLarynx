@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB7A614220167CEC00AB8C8A /* Strobe engine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7A614120167CEC00AB8C8A /* Strobe engine.swift */; };
 		D4EB34FA709AB3861B383F94 /* Pods_GuitarTuner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D1ABF3C1CEBC69351AFB3AF /* Pods_GuitarTuner.framework */; };
 		D51729C71C370D9F0077E8B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51729C31C370D9F0077E8B2 /* AppDelegate.swift */; };
 		D51729C81C370D9F0077E8B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51729C41C370D9F0077E8B2 /* ViewController.swift */; };
@@ -19,6 +20,7 @@
 		04C4BE8A74712506927C1A5A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B8EABAEB6DB7CDA44CCC1AD /* Pods-GuitarTuner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GuitarTuner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GuitarTuner/Pods-GuitarTuner.debug.xcconfig"; sourceTree = "<group>"; };
 		1D1ABF3C1CEBC69351AFB3AF /* Pods_GuitarTuner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GuitarTuner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB7A614120167CEC00AB8C8A /* Strobe engine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strobe engine.swift"; sourceTree = "<group>"; };
 		D51729C31C370D9F0077E8B2 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D51729C41C370D9F0077E8B2 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D51729C61C370D9F0077E8B2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 		D51729C21C370D9F0077E8B2 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AB7A614120167CEC00AB8C8A /* Strobe engine.swift */,
 				D51729C31C370D9F0077E8B2 /* AppDelegate.swift */,
 				D51729C41C370D9F0077E8B2 /* ViewController.swift */,
 			);
@@ -297,6 +300,7 @@
 			files = (
 				D51729C81C370D9F0077E8B2 /* ViewController.swift in Sources */,
 				D51729C71C370D9F0077E8B2 /* AppDelegate.swift in Sources */,
+				AB7A614220167CEC00AB8C8A /* Strobe engine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

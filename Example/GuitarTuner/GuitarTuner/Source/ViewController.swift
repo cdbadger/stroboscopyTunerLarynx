@@ -39,6 +39,21 @@ final class ViewController: UIViewController {
 
     return button
   }()
+  
+  lazy var strobeButton: UIButton = { [unowned self] in
+    let button = UIButton(type: .system)
+    button.layer.cornerRadius = 20
+    button.backgroundColor = UIColor(hex: "3DAFAE")
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+    button.setTitleColor(UIColor.white, for: UIControlState())
+    
+    button.addTarget(self, action: #selector(ViewController.strobeButtonDidPress(_:)), for: .touchUpInside)
+    button.setTitle("Start Strobe".uppercased(), for: UIControlState())
+    
+    return button
+  }()
+ 
+ 
 
   lazy var pitchEngine: PitchEngine = { [weak self] in
     let config = Config(estimationStrategy: .yin)
@@ -55,7 +70,7 @@ final class ViewController: UIViewController {
     title = "Stroboscopy".uppercased()
     view.backgroundColor = UIColor(hex: "111011")
 
-    [noteLabel, actionButton, offsetLabel].forEach {
+    [noteLabel, actionButton, offsetLabel, strobeButton].forEach {
       view.addSubview($0)
     }
 
@@ -78,14 +93,21 @@ final class ViewController: UIViewController {
     pitchEngine.active ? pitchEngine.stop() : pitchEngine.start()
     offsetLabel.isHidden = !pitchEngine.active
   }
+  
+  @objc func strobeButtonDidPress( _ button: UIButton) {
+    let text = StrobeLights.
+  }
+ 
+
+ 
 
   // MARK: - Layout
 
   func setupLayout() {
     let totalSize = UIScreen.main.bounds
 
-    constrain(actionButton, noteLabel, offsetLabel) {
-      actionButton, noteLabel, offsetLabel in
+    constrain(actionButton, noteLabel, offsetLabel, strobeButton) {
+      actionButton, noteLabel, offsetLabel, strobeButton in
 
       let superview = actionButton.superview!
 
@@ -93,7 +115,7 @@ final class ViewController: UIViewController {
       actionButton.centerX == superview.centerX
       actionButton.width == 280
       actionButton.height == 50
-
+      
       offsetLabel.bottom == actionButton.top - 60
       offsetLabel.leading == superview.leading
       offsetLabel.trailing == superview.trailing
@@ -103,6 +125,13 @@ final class ViewController: UIViewController {
       noteLabel.leading == superview.leading
       noteLabel.trailing == superview.trailing
       noteLabel.height == 80
+      
+      
+      strobeButton.top == actionButton.bottom + 30
+      strobeButton.centerX == actionButton.centerX
+      strobeButton.width == 280
+      strobeButton.height == 50
+ 
     }
   }
 
