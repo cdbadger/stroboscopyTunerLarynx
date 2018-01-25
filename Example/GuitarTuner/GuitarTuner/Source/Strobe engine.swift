@@ -11,7 +11,115 @@ import UIKit
 import AVFoundation
 import Beethoven
 import Pitchy
+//Start of code from Drew/Chris
+/*
+ enum StrobeError: Error {
+  // Enum Values/Cases:
+  case targetSimulator
+  case torchNotAvailable
+  case unknown
+  
+  // Initialization method
+  init() {
+    self = .unknown
+  }
+  
+  // Return Value Type: String
+  var description: String {
+    switch self {
+    case .targetSimulator: return "Application is running on Simulator"
+    case .torchNotAvailable: return "Torch not available on this device to show strobe light. Please run this app on a device with a torch"
+    case .unknown: return "Error unspecified"
+    }
+  }
+}
 
+class StrobeState {
+  var counter: Int = 0
+  var timer: Timer
+  var isStrobing: Bool
+  var isLightOn: Bool
+  var frequency: Double
+  var start = DispatchTime.now()
+  var end = DispatchTime.now()
+  var period: Double = 0.05
+  fileprivate var defaultDevice: AVCaptureDevice!
+  
+  init (){
+    self.counter = 0
+    self.timer = Timer()
+    self.isStrobing = false
+    self.isLightOn = false
+    self.frequency = 200
+  }
+  
+  // Start Strobe process
+  func toggleStrobe () {
+    if isLightOn == true {
+      self.isLightOn = false
+      self.timer.invalidate()
+      print("Turning timer off")
+      self.end = DispatchTime.now()
+      let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+      let timeInterval = Double(nanoTime) / 1_000_000_000
+      print("I counted this high \(counter) in this many seconds \(timeInterval)")
+      counter = 0
+    } else {
+      self.isLightOn = true
+      self.timer = Timer.scheduledTimer(timeInterval: period, target: self, selector: #selector(StrobeState.incrementCounter), userInfo: nil, repeats: true)
+      print("Turning timer on")
+      self.start = DispatchTime.now()
+    }
+  }
+  
+  // Increase counter by one
+  
+  @objc func incrementCounter () {
+    self.counter += 1
+    print("\(self.counter)")
+  }
+  //If light off turn on, if on turn off
+  func toggleLight () {
+    if #available(iOS 10.0, *) {
+      guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: AVMediaType.video, position: .unspecified)else {
+      return
+    }
+    defaultDevice = device
+  } else {
+  // Fallback on earlier versions
+  defaultDevice = AVCaptureDevice.default(for: AVMediaType.video)
+  }
+}
+}
+
+    extension StrobeState: PitchEngineDelegate {
+      
+      func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch) {
+        
+        period = 1/pitch.frequency
+        
+        /*
+         print("pitch : \(pitch.frequency) - percentage : \(offsetPercentage)")
+         
+         guard absOffsetPercentage > 1.0 else {
+         return
+         }
+         */
+      }
+      
+      func pitchEngine(_ pitchEngine: PitchEngine, didReceiveError error: Error) {
+        print(error)
+      }
+      
+      public func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine) {
+        print("Below level threshold")
+      }
+}
+*/
+// End of Chris/Drew Code
+
+/// Start of Github code
+//
 enum Type {
   
   // Enum Cases/Values
@@ -73,7 +181,7 @@ class StrobeLights: NSObject {
   fileprivate var defaultDevice: AVCaptureDevice!
   fileprivate var timer = Timer()
   
-  public private(set) var isStrobeLightOn: Bool?
+  public private(set) var isStrobeLightOn: Bool = false
   var isLightOn: Bool?
   var type = Type()
   
@@ -87,10 +195,9 @@ class StrobeLights: NSObject {
   }()
   
   // Default Initialization Method
-  override init() {
+  
+ override init() {
     super.init()
-    
-    isStrobeLightOn = false
     isLightOn = false
     period = 0.05
     
@@ -106,6 +213,7 @@ class StrobeLights: NSObject {
       defaultDevice = AVCaptureDevice.default(for: AVMediaType.video)
     }
   }
+ 
   
   // Deinitialization Method
   deinit {
@@ -149,7 +257,7 @@ extension StrobeLights {
       throw StrobeError.targetSimulator
     #else
       if defaultDevice.hasTorch {
-        if isStrobeLightOn! {
+        if isStrobeLightOn {
           if timer.isValid {
             if timer.isValid { timer.invalidate(); stopTorch(); isLightOn = false }
           } else {
@@ -240,3 +348,4 @@ func stopTorch() {
   #endif
 }
 }
+

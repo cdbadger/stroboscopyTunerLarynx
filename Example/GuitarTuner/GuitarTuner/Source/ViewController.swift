@@ -62,6 +62,11 @@ final class ViewController: UIViewController {
     return pitchEngine
   }()
 
+  lazy var strobeLights: StrobeLights = { [weak self] in
+    let strobeLights = StrobeLights()
+    return strobeLights
+  }()
+  
   // MARK: - View Lifecycle
 
   override func viewDidLoad() {
@@ -79,6 +84,7 @@ final class ViewController: UIViewController {
 
   // MARK: - Action methods
 
+  
   @objc func actionButtonDidPress(_ button: UIButton) {
     let text = pitchEngine.active
       ? NSLocalizedString("Detect frequency", comment: "").uppercased()
@@ -93,10 +99,17 @@ final class ViewController: UIViewController {
     pitchEngine.active ? pitchEngine.stop() : pitchEngine.start()
     offsetLabel.isHidden = !pitchEngine.active
   }
+  // MARK: - Strobe button action
+ @objc func strobeButtonDidPress( _ button: UIButton) {
+  let text = strobeLights.isStrobeLightOn
+    ? NSLocalizedString("Start Strobe", comment: "").uppercased()
+    : NSLocalizedString("Stop strobing", comment: "").uppercased()
   
- /* @objc func strobeButtonDidPress( _ button: UIButton) {
-    let text = StrobeLights.
-  }*/
+  button.setTitle(text, for: .normal)
+  button.backgroundColor = strobeLights.isStrobeLightOn
+    ? UIColor(hex: "3DAFAE")
+    : UIColor(hex: "E13C6C")
+  }
  
 
  
@@ -189,3 +202,4 @@ extension ViewController: PitchEngineDelegate {
     print("Below level threshold")
   }
 }
+
