@@ -11,6 +11,71 @@ import UIKit
 import AVFoundation
 import Beethoven
 import Pitchy
+class StrobeLights {
+  var active: Bool = false
+  var counter: Int = 0
+  var lightIsOn: Bool = false
+  
+  var frequency: Double = 200
+  var timer = Timer()
+  var start = DispatchTime.now()
+  var end = DispatchTime.now()
+  //Initializers
+  
+  
+  // Start strobe
+  // Stop strobe
+  // Start or Stop Strobe
+  func activateStrobe () {
+    if active == true {
+      self.active = false
+      self.timer.invalidate()
+      print("Turning timer off")
+      self.end = DispatchTime.now()
+      let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+      let timeInterval = Double(nanoTime) / 1_000_000_000
+      self.toggleTorch(on: false)
+      print("I counted this high \(counter) in this many seconds \(timeInterval)")
+      counter = 0
+    } else {
+      self.active = true
+      self.timer = Timer.scheduledTimer(timeInterval: 1/frequency, target: self, selector: #selector(StrobeLights.incrementCounter), userInfo: nil, repeats: true)
+      self.toggleTorch(on: true)
+      print("Turning timer on")
+      self.start = DispatchTime.now()
+    }
+  }
+  
+  // Turns light on or off
+  func toggleTorch(on: Bool) {
+    guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }//AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
+  
+    if device.hasTorch {
+      do {
+        try device.lockForConfiguration()
+      
+        if on == true {
+        device.torchMode = .on
+        lightIsOn = true
+        } else {
+        device.torchMode = .off
+        lightIsOn = false
+        }
+        device.unlockForConfiguration()
+      } catch {
+        print("Torch could not be used")
+      }
+    } else {
+      print("Torch is not available")
+    }
+  }
+  
+  // Counts the strobe function
+  @objc func incrementCounter () {
+    self.counter += 1
+    print("\(self.counter)")
+  }
+}
 //Start of code from Drew/Chris
 /*
  enum StrobeError: Error {
@@ -118,6 +183,7 @@ class StrobeState {
 */
 // End of Chris/Drew Code
 
+/*
 /// Start of Github code
 //
 enum Type {
@@ -277,7 +343,7 @@ extension StrobeLights {
   }
 
 /*
- @method toogleTorch
+ @method toggleTorch
  @abstract
  Set device torch on and off and return bool value
  @description
@@ -348,4 +414,4 @@ func stopTorch() {
   #endif
 }
 }
-
+*/

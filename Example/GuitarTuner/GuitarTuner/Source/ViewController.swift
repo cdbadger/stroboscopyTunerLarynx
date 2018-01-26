@@ -47,7 +47,7 @@ final class ViewController: UIViewController {
     button.titleLabel?.font = UIFont.systemFont(ofSize: 20)
     button.setTitleColor(UIColor.white, for: UIControlState())
     
-    //button.addTarget(self, action: #selector(ViewController.strobeButtonDidPress(_:)), for: .touchUpInside)
+    button.addTarget(self, action: #selector(ViewController.strobeButtonDidPress(_:)), for: .touchUpInside)
     button.setTitle("Start Strobe".uppercased(), for: UIControlState())
     
     return button
@@ -101,14 +101,16 @@ final class ViewController: UIViewController {
   }
   // MARK: - Strobe button action
  @objc func strobeButtonDidPress( _ button: UIButton) {
-  let text = strobeLights.isStrobeLightOn
+  let text = strobeLights.active
     ? NSLocalizedString("Start Strobe", comment: "").uppercased()
     : NSLocalizedString("Stop strobing", comment: "").uppercased()
   
   button.setTitle(text, for: .normal)
-  button.backgroundColor = strobeLights.isStrobeLightOn
+  button.backgroundColor = strobeLights.lightIsOn
     ? UIColor(hex: "3DAFAE")
     : UIColor(hex: "E13C6C")
+  strobeLights.active ? strobeLights.activateStrobe() : strobeLights.activateStrobe()
+  //strobeLights.active ? strobeLights.toggleTorch(on: false) : strobeLights.toggleTorch(on: true)
   }
  
 
