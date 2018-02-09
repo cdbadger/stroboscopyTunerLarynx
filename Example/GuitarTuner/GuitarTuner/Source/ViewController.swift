@@ -101,16 +101,17 @@ final class ViewController: UIViewController {
   }
   // MARK: - Strobe button action
  @objc func strobeButtonDidPress( _ button: UIButton) {
-  let text = strobeLights.active
+  let text = strobeLights.isLightOn
     ? NSLocalizedString("Start Strobe", comment: "").uppercased()
     : NSLocalizedString("Stop strobing", comment: "").uppercased()
   
   button.setTitle(text, for: .normal)
-  button.backgroundColor = strobeLights.lightIsOn
+  button.backgroundColor = strobeLights.isLightOn
     ? UIColor(hex: "3DAFAE")
     : UIColor(hex: "E13C6C")
-  strobeLights.active ? strobeLights.activateStrobe() : strobeLights.activateStrobe()
-  //strobeLights.active ? strobeLights.toggleTorch(on: false) : strobeLights.toggleTorch(on: true)
+  //strobeLights.active ? strobeLights.activateStrobe(isActive: false) : strobeLights.activateStrobe(isActive: true)
+  //strobeLights.lightIsOn ? strobeLights.toggleTorch(on: false) : strobeLights.toggleTorch(on: true)
+  self.strobeLights.toggleStrobe()
   }
  
 

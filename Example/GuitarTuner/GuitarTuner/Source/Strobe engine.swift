@@ -12,43 +12,62 @@ import AVFoundation
 import Beethoven
 import Pitchy
 class StrobeLights {
-  var active: Bool = false
   var counter: Int = 0
-  var lightIsOn: Bool = false
-  
-  var frequency: Double = 200
-  var timer = Timer()
+  var timer: Timer
+  var isStrobing: Bool
+  var isLightOn: Bool
+  var frequency: Double
   var start = DispatchTime.now()
   var end = DispatchTime.now()
-  //Initializers
+  var active: Bool
   
+  init (){
+    self.counter = 0
+    self.timer = Timer()
+    self.isStrobing = false
+    self.isLightOn = false
+    self.frequency = 10
+    self.active = false
+  }
   
-  // Start strobe
-  // Stop strobe
-  // Start or Stop Strobe
-  func activateStrobe () {
-    if active == true {
-      self.active = false
+  // Start Strobe process
+  func toggleStrobe () {
+    if isLightOn == true {
+      self.isLightOn = false
       self.timer.invalidate()
       print("Turning timer off")
       self.end = DispatchTime.now()
       let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
       let timeInterval = Double(nanoTime) / 1_000_000_000
-      self.toggleTorch(on: false)
       print("I counted this high \(counter) in this many seconds \(timeInterval)")
+      toggleTorch(on: false)
       counter = 0
+      incrementCounter()
     } else {
-      self.active = true
-      self.timer = Timer.scheduledTimer(timeInterval: 1/frequency, target: self, selector: #selector(StrobeLights.incrementCounter), userInfo: nil, repeats: true)
-      self.toggleTorch(on: true)
+      self.isLightOn = true
+      self.timer = Timer.scheduledTimer(timeInterval: 1/frequency, target: self, selector: #selector(incrementCounter), userInfo: nil, repeats: true)
       print("Turning timer on")
       self.start = DispatchTime.now()
+      toggleTorch(on: true)
     }
   }
   
+  //If light on turn off, if off turn on
+  func toggleLight () {
+    
+  }
+  
+  // Increase counter by one
+  
+  @objc func incrementCounter () {
+    self.toggleTorch(on: false)
+    self.counter += 1
+    print("\(self.counter)")
+    self.toggleTorch(on: true)
+  }
   // Turns light on or off
-  func toggleTorch(on: Bool) {
-    guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }//AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
+  @objc func toggleTorch(on: Bool ) {
+    guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
   
     if device.hasTorch {
       do {
@@ -56,10 +75,10 @@ class StrobeLights {
       
         if on == true {
         device.torchMode = .on
-        lightIsOn = true
+        
         } else {
         device.torchMode = .off
-        lightIsOn = false
+        
         }
         device.unlockForConfiguration()
       } catch {
@@ -68,12 +87,6 @@ class StrobeLights {
     } else {
       print("Torch is not available")
     }
-  }
-  
-  // Counts the strobe function
-  @objc func incrementCounter () {
-    self.counter += 1
-    print("\(self.counter)")
   }
 }
 //Start of code from Drew/Chris
