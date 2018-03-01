@@ -11,84 +11,158 @@ import UIKit
 import AVFoundation
 import Beethoven
 import Pitchy
+
+
+
+
+
 class StrobeLights {
   var counter: Int = 0
-  var timer: Timer
+  var timer: DispatchSourceTimer?
   var isStrobing: Bool
   var isLightOn: Bool
   var frequency: Double
   var start = DispatchTime.now()
   var end = DispatchTime.now()
   var active: Bool
+  var device: AVCaptureDevice
+  var torchLevel: Float
+  //var workItem: DispatchWorkItem?
+  
+  
+  private func stopTimer() {
+    timer?.cancel()
+    timer = nil
+  }
+  
+  
+  
   
   init (){
     self.counter = 0
-    self.timer = Timer()
     self.isStrobing = false
     self.isLightOn = false
-    self.frequency = 10
+    self.frequency = 100
+    
     self.active = false
-  }
+    self.torchLevel = 0.001
+    self.device = AVCaptureDevice.default(for: AVMediaType.video)!
+      if self.device.hasTorch {
+        if self.device.isTorchAvailable {
+          do {
+            try device.lockForConfiguration()
+            // hopefully only do this once
+            
+
+//              do {
+//                //try device.setTorchModeOn(level: 0.01)
+//s
+//              } catch { print("Could not set torch level") }
+            device.unlockForConfiguration()
+          } catch {
+            print("Torch could not be used")
+          }
+        } else {
+          print( "torch unavailable")
+        }
+      } else {
+        print("torch unavailable")
+      }
+    }
+
   
   // Start Strobe process
   func toggleStrobe () {
     if isLightOn == true {
       self.isLightOn = false
-      self.timer.invalidate()
+      //device.unlockForConfiguration()
+      stopTimer()
       print("Turning timer off")
       self.end = DispatchTime.now()
       let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
       let timeInterval = Double(nanoTime) / 1_000_000_000
-      print("I counted this high \(counter) in this many seconds \(timeInterval)")
-      toggleTorch(on: false)
+      print("I counted this high \(counter) in this many seconds \(timeInterval) ")
+      //toggleTorch(on: false)
+      
       counter = 0
-      incrementCounter()
+//      incrementCounter()
     } else {
       self.isLightOn = true
-      self.timer = Timer.scheduledTimer(timeInterval: 1/frequency, target: self, selector: #selector(incrementCounter), userInfo: nil, repeats: true)
-      print("Turning timer on")
-      self.start = DispatchTime.now()
-      toggleTorch(on: true)
-    }
-  }
-  
-  //If light on turn off, if off turn on
-  func toggleLight () {
-    
-  }
-  
-  // Increase counter by one
-  
-  @objc func incrementCounter () {
-    self.toggleTorch(on: false)
-    self.counter += 1
-    print("\(self.counter)")
-    self.toggleTorch(on: true)
-  }
-  // Turns light on or off
-  @objc func toggleTorch(on: Bool ) {
-    guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
-  
-    if device.hasTorch {
+      
+      // change made by removing frequecy --> 10
       do {
         try device.lockForConfiguration()
-      
-        if on == true {
-        device.torchMode = .on
+        // hopefully only do this once
         
-        } else {
-        device.torchMode = .off
         
-        }
-        device.unlockForConfiguration()
+        //              do {
+        //                //try device.setTorchModeOn(level: 0.01)
+        //
+        //              } catch { print("Could not set torch level") }
+        
       } catch {
         print("Torch could not be used")
       }
-    } else {
-      print("Torch is not available")
+      //let workItem = DispatchWorkItem {
+        //.... writing stuff in background ....
+      
+//        self.timer = Timer.scheduledTimer(timeInterval: 1/self.frequency, target: self, selector: #selector(self.incrementCounter), userInfo: nil, repeats: true)
+      startTimer()
+        print("Turning timer on")
+//      }
+//      DispatchQueue.global().async(execute: workItem)
+      
+      self.start = DispatchTime.now()
+      //toggleTorch(on: true)
     }
   }
+  
+ 
+ 
+  // Increase counter by one
+  
+  @objc func incrementCounter () {
+    self.toggleTorch(on: true)
+    self.counter += 1
+    //print("\(self.counter)")
+    self.toggleTorch(on: false)
+  }
+  // Turns light on or off
+  
+  
+  @objc func toggleTorch(on: Bool ) {
+            if on == true {
+              device.torchMode = .on
+              
+            } else {
+              device.torchMode = .off
+              
+            }
+  }
+  private func startTimer() {
+    let queue = DispatchQueue(label: "torch timer", qos: .userInteractive)
+    
+    timer?.cancel()        // cancel previous timer if any
+    
+    timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
+    let period = 1/self.frequency
+//    timer?.schedule(deadline: .now(), repeating: .seconds(period), leeway: .strict)
+    timer?.schedule(deadline: .now(), repeating: period, leeway: .nanoseconds(0))
+    
+    // or, in Swift 3:
+    //
+    // timer?.scheduleRepeating(deadline: .now(), interval: .seconds(5), leeway: .seconds(1))
+    
+    timer?.setEventHandler { [weak self] in // `[weak self]` only needed if you reference `self` in this closure and you want to prevent strong reference cycle
+      self?.incrementCounter()
+      
+    }
+    
+    timer?.resume()
+  }
 }
+
+
 //Start of code from Drew/Chris
 /*
  enum StrobeError: Error {
