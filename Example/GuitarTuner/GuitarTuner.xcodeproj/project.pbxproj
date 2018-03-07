@@ -427,6 +427,7 @@
 				DEVELOPMENT_TEAM = J35CE36V96;
 				INFOPLIST_FILE = "$(SRCROOT)/GuitarTuner/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.badger.1011;
 				PRODUCT_NAME = GuitarTuner;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -443,6 +444,7 @@
 				DEVELOPMENT_TEAM = J35CE36V96;
 				INFOPLIST_FILE = "$(SRCROOT)/GuitarTuner/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				NEW_SETTING = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.badger.1011;
 				PRODUCT_NAME = GuitarTuner;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;

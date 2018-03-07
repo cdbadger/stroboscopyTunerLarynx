@@ -71,7 +71,6 @@ final class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
     title = "Stroboscopy".uppercased()
     view.backgroundColor = UIColor(hex: "111011")
 
